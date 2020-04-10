@@ -31,8 +31,12 @@ for instr in instr_list:
 					addr = next_instr.getAddress()
 					j_addr = next_instr.getOpObjects(0)[0]
 					print("Constant branch condition at " + str(addr) + ". Jumps to " + str(j_addr))
-		except:
-			print("Constant branch error")
+					# Showing hidden code
+					listing.clearCodeUnits(j_addr, j_addr, True)
+					disassemble(j_addr)
+
+		except Exception as e:
+			print(e)
 			pass
 
 	# Multiple jumps to the same target
