@@ -5,7 +5,14 @@
 #@menupath 
 #@toolbar 
 
+def fix_code(address):
+	if proceed:
+		proceed_with_overwrite = askYesNo("Overwrite?", "Do you want to overwrite the code at 0x" + str(address))
+	if not proceed or proceed_with_overwrite:
+		listing.clearCodeUnits(address, address, True)
+		disassemble(address)
 
+proceed = askYesNo("Ask to overwrite?", "Do you want to be prompted for every overwrite?")
 
 listing = currentProgram.getListing()
 instr_list = listing.getInstructions(1)
@@ -32,8 +39,7 @@ for instr in instr_list:
 					j_addr = next_instr.getOpObjects(0)[0]
 					print("Constant branch condition at " + str(addr) + ". Jumps to " + str(j_addr))
 					# Showing hidden code
-					listing.clearCodeUnits(j_addr, j_addr, True)
-					disassemble(j_addr)
+					fix_code(j_addr)
 
 		except Exception as e:
 			print(e)
@@ -51,6 +57,8 @@ for instr in instr_list:
 				if j_addr1 == j_addr2 and (((mnemonic == "JZ" or mnemonic == "JE") and (next_mnemonic == "JNZ" or next_mnemonic == "JNE")) or ((mnemonic == "JNZ" or mnemonic == "JNE") and (next_mnemonic == "JZ" or next_mnemonic == "JE"))):
 					addr = instr.getAddress()
 					print("Multiple jumps to same target at " + str(addr) + ". Jumps to " + str(j_addr1))
+					# Showing hidden code
+					fix_code(j_addr1)
 
 		except:
 			print("Same target error")
@@ -67,3 +75,5 @@ for instr in instr_list:
 			addr = instr.getAddress()
 			j_addr = instr.getOpObjects(0)[0]
 			print("Jump to impossible disassembly segment at " + str(addr) + ". Jumps to " + str(j_addr))
+			# Show hidden code
+			fix_code(j_addr)
