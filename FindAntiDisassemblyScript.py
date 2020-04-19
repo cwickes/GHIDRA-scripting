@@ -19,7 +19,7 @@ techLocs = set()
 
 multiPass = askYesNo("Perform multiple passes?", "Perform multiple passes? (Script runs until no techniques are found)\nWARNING: Infinite loop may occur and require app shutdown (no saving)")
 
-while multiPass:
+while True:
 	techFound = False
 
 	listing = currentProgram.getListing()
@@ -94,5 +94,5 @@ while multiPass:
 				# Show hidden code
 				fix_code(j_addr)
 
-	if not techFound:
+	if not multiPass or not techFound:
 		break
